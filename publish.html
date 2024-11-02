@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publish Article</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+        function publishArticle() {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('price').value;
+            const color = document.getElementById('color').value;
+            const photo = document.getElementById('photo').src; // Get the src of the selected image
+
+            if (!title || !description || !price || !color || !photo) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const article = {
+                title: title,
+                description: description,
+                price: price,
+                color: color,
+                photo: photo
+            };
+
+            let articles = JSON.parse(localStorage.getItem('articles')) || [];
+            articles.push(article);
+            localStorage.setItem('articles', JSON.stringify(articles));
+
+            alert('Article published successfully!');
+            window.location.href = 'index.html';
+        }
+
+        function previewImage() {
+            const file = document.getElementById('fileInput').files[0];
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                document.getElementById('photo').src = reader.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Publish Your Article</h2>
+        <form onsubmit="event.preventDefault(); publishArticle();">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" class="form-control" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" id="price" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="color">Color</label>
+                <input type="text" id="color" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="fileInput">Upload Photo</label>
+                <input type="file" id="fileInput" accept="image/*" onchange="previewImage()" required>
+            </div>
+            <img id="photo" src="" alt="Preview" style="max-width: 200px; display: none;">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mt-2">Post Article</button>
+            </div>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
